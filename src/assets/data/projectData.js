@@ -30,7 +30,7 @@ const projectData = [
     projectImage:imageAsset.project4,
    
     skill: ["ReactJS", "Tailwind CSS", "GSAP", "EmailJS","VSCode"],
-    liveDemo:"https://github.com/Ratnesh-Chaturvedi",
+    liveDemo:"https://ratnesh-chaturvedi-portfolio.vercel.app/",
     codeDemo:"https://github.com/Ratnesh-Chaturvedi"
   }
 ];

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import { imageAsset } from "../assets/images/imagesAsset";
 const Homepage = () => {
   
   useGSAP(() => {
@@ -177,7 +177,7 @@ const Homepage = () => {
       </div>
       <img
         className="mypic absolute inset-0  h-full w-full object-cover  z-10    "
-        src="src/assets/pic2.png "
+        src={`${imageAsset.homepageImg}`} 
       />
     </div>
   );

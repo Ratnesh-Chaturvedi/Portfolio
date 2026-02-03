@@ -1,7 +1,7 @@
 
 import SkillCard from "../components/SkillCard";
 import { useGSAP } from "@gsap/react";
-
+import { imageAsset } from "../assets/images/imagesAsset";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Skillpage = () => {
@@ -27,57 +27,58 @@ useGSAP(() => {
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
         <SkillCard title="Frontend" color="bg-[#0ae448]">
-          <img className={iconStyle} src="/src/assets/images/html.png"  />
-          <img className={iconStyle} src="/src/assets/images/css.webp" />
-          <img className={iconStyle} src="/src/assets/images/js.webp" />
-          <img className={iconStyle} src="/src/assets/images/tailwind.webp" />
-          <img className="h-10 sm:h-23 " src="/src/assets/images/react.png" />
+          <img className={iconStyle} src={`${imageAsset.htmlImg}`}  />
+          <img className={iconStyle} src={`${imageAsset.cssImg}`} />
+          <img className={iconStyle} src={`${imageAsset.jsImg}`} />
+          <img className={iconStyle} src={`${imageAsset.tailwindImg}`} />
+          <img className="h-10 sm:h-23 " src={`${imageAsset.reactImg}`} />
         </SkillCard>
 
         <SkillCard title="Backend" color="bg-[#880d1e]">
           <img
             className={` sm:h-25 h-15 `}
-            src="/src/assets/images/nodejs.webp"
+            src={`${imageAsset.nodejsImg}`}
           />
-          <img className={iconStyle} src="/src/assets/images/Express.png" />
+          <img className={iconStyle} src={`${imageAsset.expressImg}`} />
         </SkillCard>
 
         <SkillCard title="Database & BaaS" color="bg-[#fec5fb]">
           <img
             className={iconStyle}
-            src="/src/assets/images/mongodb-logo.webp"
+            src={`${imageAsset.mongodbImg}`}
           />
-          <img className={iconStyle} src="/src/assets/images/appwrite.png" />
-          <img className={iconStyle} src="/src/assets/images/supabase.svg" />
+          <img className={iconStyle} src={`${imageAsset.appwriteImg}`} />
+          <img className={iconStyle} src={`${imageAsset.supabaseImg}`} />
         </SkillCard>
 
         <SkillCard title="Animations" color="bg-[#ffc300]">
           <img
             className={`${iconStyle} rounded-full`}
-            src="/src/assets/images/framer.png"
+            src={`${imageAsset.framerImg}`}
           />
-          <img className={iconStyle} src="/src/assets/images/gsap.png" />
+          <img className={iconStyle} src={`${imageAsset.gsapImg}`} />
         </SkillCard>
 
         <SkillCard title="Developer Experience" color="bg-[#fb8500]">
-          <img className={iconStyle} src="/src/assets/images/git.png" />
-          <img className={iconStyle} src="/src/assets/images/github.svg" />
+          <img className={iconStyle} src={`${imageAsset.vscodeImg}`} />
+          <img className={iconStyle} src={`${imageAsset.gitImg}`} />
+          <img className={iconStyle} src={`${imageAsset.githubImg}`} />
           <img
             className={`${iconStyle} rounded-full`}
-            src="/src/assets/images/postman.png"
+            src={`${imageAsset.postmanImg}`}
           />
         </SkillCard>
 
         <SkillCard title="Languages" color="bg-[#05668d]">
-          <img className={iconStyle} src="/src/assets/images/js3d.png" />
-          <img className={iconStyle} src="/src/assets/images/c.webp" />
-          <img className={iconStyle} src="/src/assets/images/c++.png" />
-          <img className={iconStyle} src="/src/assets/images/python.webp" />
-          <img className={iconStyle} src="/src/assets/images/java.png" />
+          <img className={iconStyle} src={`${imageAsset.jsImg}`} />
+          <img className={iconStyle} src={`${imageAsset.cImg}`} />
+          <img className={iconStyle} src={`${imageAsset.cppImg}`} />
+          <img className={iconStyle} src={`${imageAsset.pythonImg}`} />
+          <img className={iconStyle} src={`${imageAsset.javaImg}`} />
         </SkillCard>
 
         <SkillCard title="Deployment & Hosting" color="bg-[#bc8a5f]">
-          <img className="h-8 sm:h-10" src="/src/assets/images/vercel.svg" />
+          <img className="h-8 sm:h-10" src={`${imageAsset.vercelImg}`} />
         </SkillCard>
       </div>
 
