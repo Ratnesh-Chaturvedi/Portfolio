@@ -24,6 +24,7 @@ import vercelImg from "./vercel.svg"
 import vscodeImg from "./vscode.webp"
 import homepageImg from "./pic2.png"
 import htmlImg from "./html.png"
+
 export const imageAsset={
     project1,project2,project3,project4,
     appwriteImg,cImg,cppImg,cssImg,expressImg,framerImg,gitImg,githubImg,gsapImg,javaImg,jsImg,mongodbImg,nodejsImg,postmanImg,pythonImg,reactImg,supabaseImg,tailwindImg,vercelImg,vscodeImg,homepageImg,htmlImg
