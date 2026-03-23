@@ -63,7 +63,7 @@ const Homepage = () => {
       },
     });
 
-    gsap.to(".mypic",{
+    gsap.to(".mypic ",{
       scrollTrigger:{
         trigger:".heroContainer",
         start:"top top",
@@ -83,7 +83,6 @@ const Homepage = () => {
   useGSAP(() => {
     
     gsap.to(slider.current, {
-    
       scrollTrigger: {
         trigger: document.documentElement,
         scrub: 0.25,

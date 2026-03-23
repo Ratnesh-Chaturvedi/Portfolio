@@ -40,11 +40,11 @@ box-sizing: border-box;
 .blob{
     border-radius: 50%;
     background: conic-gradient(from  180deg,rgba(255, 120, 180, 0.9),
-    rgba(255, 255, 120, 0.9),
+    rgba(131, 255, 120, 0.9),
     rgba(255, 230, 140, 0.85),
-    rgba(160, 210, 255, 0.9),
+    rgba(86, 176, 255, 0.648),
     rgba(180, 140, 255, 0.9),
-    rgba(255, 120, 180, 0.9)
+    rgba(255, 226, 120, 0.9)
 );
     animation: blobrotation 10s linear infinite;
       filter: saturate(1.1);

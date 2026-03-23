@@ -40,6 +40,7 @@ useGSAP(() => {
             src={`${imageAsset.nodejsImg}`}
           />
           <img className={iconStyle} src={`${imageAsset.expressImg}`} />
+          <img  className="bg-white rounded-full h-10 sm:h-15" src={`${imageAsset.inngest}`} />
         </SkillCard>
 
         <SkillCard title="Database & BaaS" color="bg-[#fec5fb]">
@@ -73,12 +74,11 @@ useGSAP(() => {
           <img className={iconStyle} src={`${imageAsset.jsImg}`} />
           <img className={iconStyle} src={`${imageAsset.cImg}`} />
           <img className={iconStyle} src={`${imageAsset.cppImg}`} />
-          <img className={iconStyle} src={`${imageAsset.pythonImg}`} />
           <img className={iconStyle} src={`${imageAsset.javaImg}`} />
         </SkillCard>
 
         <SkillCard title="Deployment & Hosting" color="bg-[#bc8a5f]">
-          <img className="h-8 sm:h-10" src={`${imageAsset.vercelImg}`} />
+          <img className="h-10  sm:h-15 bg-white rounded-xl p-2" src={`${imageAsset.vercelImg}`} />
         </SkillCard>
       </div>
 

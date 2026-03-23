@@ -89,7 +89,7 @@ import Button from "../components/Button";
       </div>
       <div className="paratext4 mt-10 sm:mt-30    p-2  w-dvw   text-[#3291B6]  sm:text-xl font-[tango] tracking-wide md:flex md:flex-col sm:gap-4 text-center md:items-center ">
         <p>"Open to exciting opportunities in web and software development, ready to build impactful projects." </p>
-        <Button content="Download Resume" link="/r.pdf" className="mt-5 sm:mt-5  "/>
+        <Button content="Download Resume" link="/myresume.pdf" className="mt-5 sm:mt-5  "/>
       </div>
      
     </div>
