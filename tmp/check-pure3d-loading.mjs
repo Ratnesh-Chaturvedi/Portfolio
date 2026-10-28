@@ -1,0 +1,21 @@
+import { chromium } from 'playwright';
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
+const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.route('**/pic2*.png',async route=>{await new Promise(resolve=>setTimeout(resolve,6500));await route.continue();});
+await page.goto('http://127.0.0.1:5173/?intro=replay',{waitUntil:'domcontentloaded'});
+await page.waitForTimeout(4300);
+console.log('slow asset keeps flowers attached',await page.locator('.blossom-loader').getAttribute('data-phase'));
+await page.locator('.blossom-loader').waitFor({state:'detached',timeout:25000});
+await page.unroute('**/pic2*.png');
+await page.goto('http://127.0.0.1:5173/');console.log('repeat visit intro count',await page.locator('.blossom-loader').count());
+await page.goto('http://127.0.0.1:5173/?intro=replay');await page.getByRole('button',{name:'Skip intro'}).click();
+await page.locator('.blossom-loader').waitFor({state:'detached'});console.log('skip works');
+const unsupported=await browser.newPage();
+await unsupported.addInitScript(()=>{
+ const get=HTMLCanvasElement.prototype.getContext;
+ HTMLCanvasElement.prototype.getContext=function(type,...args){return type.includes('webgl') ? null : get.call(this,type,...args);};
+});
+unsupported.on('pageerror',e=>errors.push(e.message));
+await unsupported.goto('http://127.0.0.1:5173/?intro=replay');
+await unsupported.locator('.blossom-loader').waitFor({state:'detached',timeout:15000});console.log('unsupported WebGL proceeds to homepage');
+console.log('errors',errors);await browser.close();if(errors.length)process.exitCode=1;

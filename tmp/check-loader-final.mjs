@@ -1,0 +1,27 @@
+import { chromium } from 'playwright';
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
+const errors=[];
+const page=await browser.newPage({viewport:{width:1440,height:900}});
+page.on('pageerror',error=>errors.push(error.message));
+page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+await page.goto('http://127.0.0.1:5173/?intro=replay');
+await page.waitForFunction(()=>document.querySelector('.blossom-loader')?.dataset.phase==='dissolving');
+await page.waitForTimeout(800);await page.screenshot({path:'tmp/loader-preview/dust-final.png'});
+await page.locator('.blossom-loader').waitFor({state:'detached',timeout:15000});
+console.log('after intro',await page.evaluate(()=>({overflow:document.body.style.overflow,inert:document.querySelector('#smooth-wrapper').inert})));
+await page.goto('http://127.0.0.1:5173/?intro=replay');await page.getByRole('button',{name:'Skip intro'}).click();
+await page.locator('.blossom-loader').waitFor({state:'detached'});console.log('skip passed');
+await page.route('**/pic2*.png',async route=>{await new Promise(resolve=>setTimeout(resolve,7000));await route.continue();});
+await page.goto('http://127.0.0.1:5173/?intro=replay',{waitUntil:'domcontentloaded'});
+await page.waitForTimeout(4500);
+console.log('slow hero keeps loader',await page.locator('.blossom-loader').count());
+await page.locator('.blossom-loader').waitFor({state:'detached',timeout:20000});console.log('slow hero finishes');
+const fallback=await browser.newPage();
+await fallback.addInitScript(()=>{
+ const original=HTMLCanvasElement.prototype.getContext;
+ HTMLCanvasElement.prototype.getContext=function(type,...args){return type.includes('webgl') ? null : original.call(this,type,...args);};
+});
+fallback.on('pageerror',error=>errors.push(error.message));
+await fallback.goto('http://127.0.0.1:5173/?intro=replay');
+await fallback.locator('.blossom-loader').waitFor({state:'detached',timeout:15000});console.log('no WebGL fallback finishes');
+console.log('errors',errors);await browser.close();if(errors.length)process.exitCode=1;

@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--enable-webgl','--ignore-gpu-blocklist']});
+const page=await browser.newPage({viewport:{width:1440,height:900}});
+await page.goto('http://127.0.0.1:5173/?intro=replay');
+await page.waitForFunction(()=>document.querySelector('.blossom-loader')?.dataset.phase==='growing');
+await page.waitForTimeout(700);await page.screenshot({path:'tmp/loader-preview/branch-early.png'});
+await page.waitForTimeout(700);await page.screenshot({path:'tmp/loader-preview/branch-forks.png'});
+await page.waitForTimeout(700);await page.screenshot({path:'tmp/loader-preview/branch-twigs.png'});
+await page.locator('.blossom-loader').waitFor({state:'detached',timeout:20000});
+await browser.close();
