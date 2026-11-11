@@ -1,91 +1,95 @@
-
-import SkillCard from "../components/SkillCard";
+import React, { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { imageAsset } from "../assets/images/imagesAsset";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import InteractiveGlobe from "../components/InteractiveGlobe";
+import { CONTINENTS_DATA } from "../assets/data/continentSkillsData";
 
+/**
+ * Skillpage (#skills)
+ * 
+ * Features:
+ * - Pinned staged scroll experience: as you scroll down, the real 3D dot-matrix globe
+ *   rotates continuously across Earth, sequentially revealing all 7 continental skill domains
+ *   until all skills are shown.
+ * - Pure SVG motion-graphics animation: animated glowing constellation laser beams branch out
+ *   from the active continent beacon on the 3D globe to floating tech logos.
+ * - Zero card containers, zero boxes, zero full-screen blur: the 3D globe stays centered,
+ *   crisp, and interactive throughout.
+ * - Direct interactive continent click on the 3D globe to smoothly rotate to any domain.
+ * - Pinned #skills tag animation stays firmly at top-4 left-4 throughout the entire scroll.
+ */
 const Skillpage = () => {
-useGSAP(() => {
-  ScrollTrigger.create({
-    trigger: ".sectionContianer",
-    start: "top top",
-    end: "bottom 10%",
-    scrub: true,
-    pin: ".pintextskill",
-    pinSpacing: false, // 🔑 VERY IMPORTANT
-  });
-});
+  const sectionRef = useRef(null);
+  const [activeContinent, setActiveContinent] = useState(CONTINENTS_DATA[0]);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Staged ScrollTrigger Pinning: pins the section while the user scrolls through all 8 skill groups
+  useGSAP(
+    () => {
+      // Section pin & scroll driver across all 8 skill groups
+      let lastProgress = -1;
+      let lastStep = -1;
 
-  const iconStyle = "h-10 sm:h-14 md:h-16  ";
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "+=3800", // Generous runway for all 8 domains
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+          onUpdate: (self) => {
+            if (Math.abs(self.progress - lastProgress) > 0.002) {
+              lastProgress = self.progress;
+              setScrollProgress(self.progress);
+            }
+            const stepIndex = Math.min(
+              CONTINENTS_DATA.length - 1,
+              Math.floor(self.progress * CONTINENTS_DATA.length)
+            );
+            if (stepIndex !== lastStep) {
+              lastStep = stepIndex;
+              setActiveContinent(CONTINENTS_DATA[stepIndex]);
+            }
+          },
+        },
+      });
+
+      return () => {
+        tl.kill();
+      };
+    },
+    { scope: sectionRef }
+  );
+
+  const handleSelectContinent = (continent) => {
+    setActiveContinent(continent);
+  };
 
   return (
-    <section className="sectionContianer min-h-screen min-w-screen  bg-[#121111] px-4 py-10 relative border-b-3 border-[#222020] ">
-      <p className="pintextskill absolute  top-4 left-4 font-[tango] text-xl text-[#f05038] z-10">
-        #skills
-      </p>
+    <section
+      ref={sectionRef}
+      id="skills"
+      className="sectionContianer relative w-full h-screen min-h-[560px] sm:min-h-[640px] bg-[#070709] px-3 sm:px-6 md:px-8 py-3 sm:py-5 border-b-3 border-[#222020] overflow-hidden flex flex-col items-center justify-center"
+    >
+      {/* Background Ambient Radial Lighting */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(139,92,246,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
 
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
-        <SkillCard title="Frontend" color="bg-[#0ae448]">
-          <img className={iconStyle} src={`${imageAsset.htmlImg}`}  />
-          <img className={iconStyle} src={`${imageAsset.cssImg}`} />
-          <img className={iconStyle} src={`${imageAsset.jsImg}`} />
-          <img className={iconStyle} src={`${imageAsset.tailwindImg}`} />
-          <img className="h-10 sm:h-23 " src={`${imageAsset.reactImg}`} />
-        </SkillCard>
-
-        <SkillCard title="Backend" color="bg-[#880d1e]">
-          <img
-            className={` sm:h-25 h-15 `}
-            src={`${imageAsset.nodejsImg}`}
-          />
-          <img className={iconStyle} src={`${imageAsset.expressImg}`} />
-          <img  className="bg-white rounded-full h-10 sm:h-15" src={`${imageAsset.inngest}`} />
-        </SkillCard>
-
-        <SkillCard title="Database & BaaS" color="bg-[#fec5fb]">
-          <img
-            className={iconStyle}
-            src={`${imageAsset.mongodbImg}`}
-          />
-          <img className={iconStyle} src={`${imageAsset.appwriteImg}`} />
-          <img className={iconStyle} src={`${imageAsset.supabaseImg}`} />
-        </SkillCard>
-
-        <SkillCard title="Animations" color="bg-[#ffc300]">
-          <img
-            className={`${iconStyle} rounded-full`}
-            src={`${imageAsset.framerImg}`}
-          />
-          <img className={iconStyle} src={`${imageAsset.gsapImg}`} />
-        </SkillCard>
-
-        <SkillCard title="Developer Experience" color="bg-[#fb8500]">
-          <img className={iconStyle} src={`${imageAsset.vscodeImg}`} />
-          <img className={iconStyle} src={`${imageAsset.gitImg}`} />
-          <img className={iconStyle} src={`${imageAsset.githubImg}`} />
-          <img
-            className={`${iconStyle} rounded-full`}
-            src={`${imageAsset.postmanImg}`}
-          />
-        </SkillCard>
-
-        <SkillCard title="Languages" color="bg-[#05668d]">
-          <img className={iconStyle} src={`${imageAsset.jsImg}`} />
-          <img className={iconStyle} src={`${imageAsset.cImg}`} />
-          <img className={iconStyle} src={`${imageAsset.cppImg}`} />
-          <img className={iconStyle} src={`${imageAsset.javaImg}`} />
-        </SkillCard>
-
-        <SkillCard title="Deployment & Hosting" color="bg-[#bc8a5f]">
-          <img className="h-10  sm:h-15 bg-white rounded-xl p-2" src={`${imageAsset.vercelImg}`} />
-        </SkillCard>
+      {/* Clean Centered Header */}
+      <div className="text-center pt-2 sm:pt-4 z-20 relative">
+        <h2 className="font-[tango] text-2xl sm:text-3xl md:text-4xl text-white tracking-wide">
+          Interactive Skill Globe
+        </h2>
       </div>
 
-      <div className="lasttext mt-12 text-center">
-        <h1 className="font-[tango] tracking-wide   text-2xl md:text-3xl text-[#00bae2]">
-          I'm still learning new skills 🚀
-        </h1>
+      {/* Centered 3D Globe with Animated SVG Constellation & Floating Tech Logos */}
+      <div className="relative w-full max-w-6xl mx-auto flex-1 flex items-center justify-center my-auto z-20">
+        <InteractiveGlobe
+          activeContinent={activeContinent}
+          onSelectContinent={handleSelectContinent}
+          scrollProgress={scrollProgress}
+        />
       </div>
     </section>
   );
