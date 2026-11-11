@@ -66,7 +66,7 @@ const Aboutme = () => {
           trigger: containerRef.current,
           start: "top 65%",
           end: "bottom 75%",
-          scrub: 0.8,
+          scrub: 0.5,
         },
       });
 
@@ -159,7 +159,7 @@ const Aboutme = () => {
               {wordsPart1.map((item, idx) => (
                 <span
                   key={`p1-${idx}`}
-                  className="about-word-1 inline-block mr-[0.28em] text-[#242222] will-change-transform"
+                  className="about-word-1 inline-block mr-[0.28em] text-[#242222]"
                 >
                   {item.text}
                 </span>
@@ -169,7 +169,7 @@ const Aboutme = () => {
               {wordsPart2.map((item, idx) => (
                 <span
                   key={`p2-${idx}`}
-                  className={`about-word-2 inline-block mr-[0.28em] text-[#242222] will-change-transform ${
+                  className={`about-word-2 inline-block mr-[0.28em] text-[#242222] ${
                     item.isCursive
                       ? "about-cursive font-editorial italic font-normal text-[1.14em] tracking-normal px-[0.04em]"
                       : ""
@@ -183,7 +183,7 @@ const Aboutme = () => {
               {wordsPart3.map((item, idx) => (
                 <span
                   key={`p3-${idx}`}
-                  className={`about-word-3 inline-block mr-[0.28em] text-[#242222] will-change-transform ${
+                  className={`about-word-3 inline-block mr-[0.28em] text-[#242222] ${
                     item.isCursive
                       ? "about-cursive font-editorial italic font-normal text-[1.14em] tracking-normal px-[0.04em]"
                       : ""

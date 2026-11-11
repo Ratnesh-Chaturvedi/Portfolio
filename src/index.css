@@ -97,61 +97,14 @@ html, body {
   animation: marqueeContinuousLoop 65s linear infinite;
 }
 
+/* Global hardware acceleration for smooth 60-120fps transforms */
+#smooth-content {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
 /* Dynamic Atmospheric Sunlight Ray Animations */
-@keyframes sunbeamBreathe {
-  0%, 100% {
-    opacity: 0.75;
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.025) rotate(0.6deg);
-  }
-}
-
-@keyframes sunbeamShaftDrift {
-  0%, 100% {
-    opacity: 0.45;
-    transform: translate(0, 0) scaleY(1);
-  }
-  50% {
-    opacity: 0.75;
-    transform: translate(10px, 8px) scaleY(1.04);
-  }
-}
-
-@keyframes dustMoteFloat {
-  0% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.85;
-  }
-  80% {
-    opacity: 0.85;
-  }
-  100% {
-    transform: translate3d(260px, 220px, 0);
-    opacity: 0;
-  }
-}
-
-.animate-sunbeam-breathe {
-  animation: sunbeamBreathe 7s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-.animate-sunbeam-drift {
-  animation: sunbeamShaftDrift 11s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-.animate-dust-mote {
-  animation: dustMoteFloat 8s linear infinite;
-  will-change: transform, opacity;
-}
-
 .gradient-text {
   color: #A78BFA;
   background: linear-gradient(

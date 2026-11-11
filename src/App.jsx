@@ -1,52 +1,63 @@
-import React, { useState,lazy,Suspense } from 'react'
-
-
+import React, { useEffect, useState } from 'react';
 import "remixicon/fonts/remixicon.css";
-import gsap from 'gsap'
+import gsap from 'gsap';
 import { useGSAP } from "@gsap/react";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
 
-import SimplePreloader from './components/SimplePreloader';
+import Preloader from "./components/Preloader";
+import Homepage from "./pages/Homepage";
+import Aboutme from "./pages/Aboutme";
+import Skillpage from "./pages/Skillpage";
+import Project from "./pages/Project";
+import Contact from "./pages/Contact";
+
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-
-const Homepage = lazy(() => import("./pages/Homepage"));
-const Aboutme = lazy(() => import("./pages/Aboutme"));
-const Skillpage = lazy(() => import("./pages/Skillpage"));
-const Project = lazy(() => import("./pages/Project"));
-const Contact = lazy(() => import("./pages/Contact"));
 const App = () => {
-  
+  const [showPreloader, setShowPreloader] = useState(true);
 
-    useGSAP(() => {
-      try {
-        if (ScrollSmoother && typeof ScrollSmoother.create === "function") {
-          ScrollSmoother.create({
-            smooth: 1.5,
-            effects: true,
-          });
-        }
-      } catch (e) {
-        console.warn("ScrollSmoother:", e);
+  useGSAP(() => {
+    try {
+      if (ScrollSmoother && typeof ScrollSmoother.create === "function") {
+        ScrollSmoother.create({
+          smooth: 1.0, // Silky smooth without floaty input lag
+          smoothTouch: 0.1, // Direct, instant response on mobile touch
+          effects: true,
+          normalizeScroll: true, // Eliminates mobile URL-bar jitter
+        });
       }
-    });
+    } catch (e) {
+      console.warn("ScrollSmoother:", e);
+    }
+  }, []);
+
+  const handlePreloaderComplete = () => {
+    setShowPreloader(false);
+    // Lock pin & scroll coordinates once preloader curtain finishes exit
+    ScrollTrigger.refresh();
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div id="smooth-wrapper" className="bg-[#09090D] min-h-screen text-[#F5F2FA]">
-      <div id="smooth-content">
-        <Suspense fallback={<SimplePreloader/>}>
+    <>
+      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
+      <div id="smooth-wrapper" className="bg-[#09090D] min-h-screen text-[#F5F2FA]">
+        <div id="smooth-content">
           <Homepage />
           <Aboutme />
           <Skillpage />
           <Project />
           <Contact />
-        </Suspense>
+        </div>
       </div>
-    </div>
-   
-    
-  
-  )
-}
+    </>
+  );
+};
 
-export default App
+export default App;

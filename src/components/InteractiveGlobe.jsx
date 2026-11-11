@@ -161,7 +161,6 @@ const InteractiveGlobe = ({
   const isTransitioningRef = useRef(false);
 
   const currentIndex = CONTINENTS_DATA.findIndex((c) => c.id === activeContinent?.id);
-  const total = CONTINENTS_DATA.length;
 
   // Keep activeContinentRef in sync and immediately calculate new beacon position
   useEffect(() => {
@@ -395,10 +394,18 @@ const InteractiveGlobe = ({
     const halo = new THREE.Mesh(haloGeo, haloMat);
     scene.add(halo);
 
-    // 8. Animation & Screen Projection Loop
+    // 8. Animation & Screen Projection Loop (Zero-Jank Smart Throttling)
     const tempVec = new THREE.Vector3();
+    let isGlobeVisible = true;
+    let lastRotX = -999;
+    let lastRotY = -999;
 
     const animate = () => {
+      if (!isGlobeVisible) {
+        animationFrameRef.current = null;
+        return;
+      }
+
       animationFrameRef.current = requestAnimationFrame(animate);
 
       // Inertia when dragging
@@ -407,55 +414,65 @@ const InteractiveGlobe = ({
         globeGroup.rotation.y += velocityRef.current.y;
       }
 
-      renderer.render(scene, camera);
+      const curRotX = globeGroup?.rotation.x ?? 0;
+      const curRotY = globeGroup?.rotation.y ?? 0;
+      const rotationDelta = Math.abs(curRotX - lastRotX) + Math.abs(curRotY - lastRotY);
 
-      // Project 3D continent marker positions into 2D screen space
-      const currentWidth = container.clientWidth || width;
-      const currentHeight = container.clientHeight || height;
-      const markers = [];
-      const currentActive = activeContinentRef.current;
-      let activeBeacon = null;
+      // Only re-project and re-render React state if globe moved
+      if (rotationDelta > 0.0004 || isTransitioningRef.current || isDraggingRef.current) {
+        lastRotX = curRotX;
+        lastRotY = curRotY;
 
-      CONTINENTS_DATA.forEach((c) => {
-        const mesh = beaconMeshesRef.current[c.id];
-        if (!mesh) return;
+        renderer.render(scene, camera);
 
-        mesh.getWorldPosition(tempVec);
-        const isFacing = tempVec.z > -12;
+        // Project 3D continent marker positions into 2D screen space
+        const currentWidth = container.clientWidth || width;
+        const currentHeight = container.clientHeight || height;
+        const markers = [];
+        const currentActive = activeContinentRef.current;
+        let activeBeacon = null;
 
-        if (isFacing) {
-          tempVec.project(camera);
-          const screenX = (tempVec.x * 0.5 + 0.5) * currentWidth;
-          const screenY = (-(tempVec.y * 0.5) + 0.5) * currentHeight;
+        CONTINENTS_DATA.forEach((c) => {
+          const mesh = beaconMeshesRef.current[c.id];
+          if (!mesh) return;
 
-          if (currentActive && c.id === currentActive.id) {
-            activeBeacon = { x: screenX, y: screenY, isFacing: true };
+          mesh.getWorldPosition(tempVec);
+          const isFacing = tempVec.z > -12;
+
+          if (isFacing) {
+            tempVec.project(camera);
+            const screenX = (tempVec.x * 0.5 + 0.5) * currentWidth;
+            const screenY = (-(tempVec.y * 0.5) + 0.5) * currentHeight;
+
+            if (currentActive && c.id === currentActive.id) {
+              activeBeacon = { x: screenX, y: screenY, isFacing: true };
+            }
+
+            markers.push({
+              id: c.id,
+              name: c.name,
+              color: c.color,
+              x: screenX,
+              y: screenY,
+              continent: c,
+            });
           }
+        });
 
-          markers.push({
-            id: c.id,
-            name: c.name,
-            color: c.color,
-            x: screenX,
-            y: screenY,
-            continent: c,
-          });
+        // Synchronize active continent's beacon position
+        if (activeBeacon) {
+          if (
+            currentActive?.id !== currentActiveIdRef.current ||
+            Math.hypot(activeBeacon.x - beaconRef.current.x, activeBeacon.y - beaconRef.current.y) > 0.4
+          ) {
+            currentActiveIdRef.current = currentActive?.id;
+            beaconRef.current = { x: activeBeacon.x, y: activeBeacon.y };
+            setActiveBeaconPos(activeBeacon);
+          }
         }
-      });
 
-      // Synchronize active continent's beacon position
-      if (activeBeacon) {
-        if (
-          currentActive?.id !== currentActiveIdRef.current ||
-          Math.hypot(activeBeacon.x - beaconRef.current.x, activeBeacon.y - beaconRef.current.y) > 0.4
-        ) {
-          currentActiveIdRef.current = currentActive?.id;
-          beaconRef.current = { x: activeBeacon.x, y: activeBeacon.y };
-          setActiveBeaconPos(activeBeacon);
-        }
+        setProjectedMarkers(markers);
       }
-
-      setProjectedMarkers(markers);
     };
 
     animationFrameRef.current = requestAnimationFrame(animate);
@@ -482,10 +499,23 @@ const InteractiveGlobe = ({
         }
       }
     });
+    // Pause Three.js render loop when globe is out of viewport to save battery & CPU
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isGlobeVisible = entry.isIntersecting;
+        if (isGlobeVisible && !animationFrameRef.current) {
+          animationFrameRef.current = requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    visibilityObserver.observe(container);
+
     resizeObserver.observe(container);
 
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      visibilityObserver.disconnect();
       resizeObserver.disconnect();
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -659,81 +689,21 @@ const InteractiveGlobe = ({
       </div>
 
       {/* =========================================================================
-          4. DOMAIN INFO PANEL (Left Side on Desktop/Tablet, Top Badge on Mobile)
+          4. CLEAN MINIMALIST CONTINENTAL PROGRESS INDICATOR (No Text, No Badges)
           ========================================================================= */}
-      {/* Desktop & Tablet Left Panel */}
-      <div className="hidden md:flex absolute left-4 sm:left-6 md:left-8 lg:left-12 xl:left-16 top-1/2 -translate-y-1/2 max-w-[210px] md:max-w-[240px] lg:max-w-[280px] xl:max-w-[300px] flex-col items-start text-left pointer-events-none z-20">
-        <div className="flex items-center gap-2 mb-1">
-          <span
-            className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase font-semibold"
-            style={{ color: activeContinent?.color }}
-          >
-            0{currentIndex + 1} / 0{total} • {activeContinent?.name}
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-ping"
-            style={{ backgroundColor: activeContinent?.color }}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 pointer-events-auto">
+        {CONTINENTS_DATA.map((c, i) => (
+          <button
+            key={c.id}
+            onClick={() => onSelectContinent(c)}
+            className="h-1 rounded-full transition-all duration-300 cursor-pointer focus:outline-none"
+            style={{
+              width: i === currentIndex ? "24px" : "6px",
+              backgroundColor: i === currentIndex ? activeContinent?.color : "rgba(255,255,255,0.2)",
+            }}
+            title={c.domain}
           />
-        </div>
-
-        <h3 className="font-[tango] text-xl md:text-2xl lg:text-3xl text-white tracking-wide leading-tight mb-2">
-          {activeContinent?.domain}
-        </h3>
-
-        <p className="text-xs lg:text-sm text-neutral-400 font-medium leading-relaxed mb-4 line-clamp-3">
-          {activeContinent?.tagline}
-        </p>
-
-        {/* 8-Step Continental Domain Progress Indicators */}
-        <div className="flex items-center gap-1.5 pointer-events-auto">
-          {CONTINENTS_DATA.map((c, i) => (
-            <button
-              key={c.id}
-              onClick={() => onSelectContinent(c)}
-              className="h-1 rounded-full transition-all duration-300 cursor-pointer"
-              style={{
-                width: i === currentIndex ? "22px" : "6px",
-                backgroundColor: i === currentIndex ? activeContinent?.color : "rgba(255,255,255,0.2)",
-              }}
-              title={c.domain}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile Top Domain Header & Progress Dots */}
-      <div className="md:hidden absolute top-1 left-1/2 -translate-x-1/2 text-center pointer-events-none z-20 w-full px-3">
-        <div className="flex items-center justify-center gap-1.5 mb-0.5">
-          <span
-            className="text-[9px] font-mono tracking-[0.16em] uppercase font-semibold"
-            style={{ color: activeContinent?.color }}
-          >
-            0{currentIndex + 1} / 0{total} • {activeContinent?.name}
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-ping"
-            style={{ backgroundColor: activeContinent?.color }}
-          />
-        </div>
-        <h3 className="font-[tango] text-base xs:text-lg text-white tracking-wide leading-tight">
-          {activeContinent?.domain}
-        </h3>
-
-        {/* Mobile 8-step progress dots */}
-        <div className="flex items-center justify-center gap-1 mt-1 pointer-events-auto">
-          {CONTINENTS_DATA.map((c, i) => (
-            <button
-              key={c.id}
-              onClick={() => onSelectContinent(c)}
-              className="h-1 rounded-full transition-all duration-300 cursor-pointer"
-              style={{
-                width: i === currentIndex ? "18px" : "4px",
-                backgroundColor: i === currentIndex ? activeContinent?.color : "rgba(255,255,255,0.25)",
-              }}
-              title={c.domain}
-            />
-          ))}
-        </div>
+        ))}
       </div>
 
       {/* =========================================================================
@@ -919,7 +889,11 @@ const InteractiveGlobe = ({
                 >
                   <img
                     src={skill.icon}
-                    alt={skill.name}
+                    alt={`${skill.name} logo`}
+                    loading="lazy"
+                    decoding="async"
+                    width="48"
+                    height="48"
                     className="w-full h-full object-contain filter group-hover:scale-110 transition-transform duration-300"
                     style={{
                       filter: `drop-shadow(0 0 6px ${activeContinent?.glowColor})`,

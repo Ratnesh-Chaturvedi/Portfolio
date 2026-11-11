@@ -28,6 +28,9 @@ const Skillpage = () => {
   useGSAP(
     () => {
       // Section pin & scroll driver across all 8 skill groups
+      let lastProgress = -1;
+      let lastStep = -1;
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -35,15 +38,20 @@ const Skillpage = () => {
           end: "+=3800", // Generous runway for all 8 domains
           pin: true,
           pinSpacing: true,
-          scrub: 0.6,
+          scrub: 0.5,
           onUpdate: (self) => {
-            setScrollProgress(self.progress);
-            // Calculate active continent (0 to 7)
+            if (Math.abs(self.progress - lastProgress) > 0.002) {
+              lastProgress = self.progress;
+              setScrollProgress(self.progress);
+            }
             const stepIndex = Math.min(
               CONTINENTS_DATA.length - 1,
               Math.floor(self.progress * CONTINENTS_DATA.length)
             );
-            setActiveContinent(CONTINENTS_DATA[stepIndex]);
+            if (stepIndex !== lastStep) {
+              lastStep = stepIndex;
+              setActiveContinent(CONTINENTS_DATA[stepIndex]);
+            }
           },
         },
       });

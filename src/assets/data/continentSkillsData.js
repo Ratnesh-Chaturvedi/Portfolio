@@ -28,11 +28,11 @@ export const CONTINENTS_DATA = [
     description:
       "Crafting high-performance, fluid user interfaces with modern React architectures, reactive state management, and utility-first styling.",
     skills: [
+      { name: "Next.js", icon: aiSkillsIcons.nextjs, tag: "Full-Stack React & SSR" },
       { name: "React.js", icon: imageAsset.reactImg, tag: "Primary Framework" },
-      { name: "JavaScript", icon: imageAsset.jsImg, tag: "ES6+ Modern" },
-      { name: "HTML5", icon: imageAsset.htmlImg, tag: "Semantic DOM" },
-      { name: "CSS3", icon: imageAsset.cssImg, tag: "Modern Styling" },
+      { name: "TypeScript", icon: aiSkillsIcons.typescript, tag: "Type-Safe UI" },
       { name: "Tailwind CSS", icon: imageAsset.tailwindImg, tag: "Utility First" },
+      { name: "JavaScript", icon: imageAsset.jsImg, tag: "ES6+ Modern" },
     ],
     polygons: [
       // Alaska & Canada mainland & USA
@@ -135,10 +135,11 @@ export const CONTINENTS_DATA = [
     description:
       "Deep foundation in low-level and high-level programming languages, algorithmic problem solving, memory management, and OOP paradigms.",
     skills: [
+      { name: "Python", icon: imageAsset.pythonImg, tag: "AI, Data & Backend" },
+      { name: "TypeScript", icon: aiSkillsIcons.typescript, tag: "Strict Static Typing" },
       { name: "JavaScript", icon: imageAsset.jsImg, tag: "Modern Full-Stack" },
       { name: "C++", icon: imageAsset.cppImg, tag: "OOP & Performance" },
       { name: "C", icon: imageAsset.cImg, tag: "Systems Programming" },
-      { name: "Java", icon: imageAsset.javaImg, tag: "Enterprise OOP" },
     ],
     polygons: [
       // Africa Mainland

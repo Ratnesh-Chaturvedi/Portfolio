@@ -122,15 +122,6 @@ const Homepage = () => {
           "-=0.6"
         )
         .from(
-          ".right-indicator",
-          {
-            opacity: 0,
-            x: 15,
-            duration: 0.7,
-          },
-          "-=0.6"
-        )
-        .from(
           ".bottom-bar",
           {
             opacity: 0,
@@ -168,57 +159,41 @@ const Homepage = () => {
     >
       {/* =========================================================================
           SLENDER FOCUSED VOLUMETRIC SUNLIGHT RAY FROM TOP-LEFT (#f05038 / amber)
+          Hardware-accelerated with zero runtime blur filters for maximum 120fps smoothness
           ========================================================================= */}
       <div className="sunlight-ray-wrapper absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-[4]">
         
-        {/* Volumetric Warm Light Beam */}
+        {/* Volumetric Warm Light Beam (Smooth GPU gradient, zero raster blur) */}
         <div
-          className="absolute -top-24 -left-20 w-[145vw] h-[125vh] origin-top-left pointer-events-none animate-sunbeam-breathe"
+          className="absolute -top-10 -left-10 w-[120vw] h-[100vh] origin-top-left pointer-events-none"
           style={{
             background: `
-              conic-gradient(
-                from 114deg at 0% 0%,
-                transparent 0deg,
-                rgba(235, 95, 50, 0.04) 12deg,
-                rgba(235, 100, 55, 0.26) 20deg,
-                rgba(255, 190, 150, 0.44) 25deg,
-                rgba(255, 230, 205, 0.56) 28deg,
-                rgba(255, 190, 150, 0.44) 31deg,
-                rgba(235, 100, 55, 0.26) 36deg,
-                rgba(235, 95, 50, 0.04) 43deg,
-                transparent 49deg
+              radial-gradient(
+                ellipse at 10% 0%,
+                rgba(255, 230, 205, 0.22) 0%,
+                rgba(240, 80, 56, 0.14) 28%,
+                rgba(235, 100, 55, 0.05) 55%,
+                transparent 72%
               )
             `,
-            filter: "blur(24px)",
             mixBlendMode: "screen",
           }}
         />
 
-        {/* Inner Warm Accent Shimmer */}
+        {/* Diagonal Light Stream */}
         <div
-          className="absolute -top-16 -left-16 w-[130vw] h-[110vh] origin-top-left pointer-events-none opacity-65 animate-sunbeam-drift"
+          className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40"
           style={{
             background: `
-              conic-gradient(
-                from 117deg at 0% 0%,
-                transparent 0deg,
-                rgba(235, 105, 55, 0.12) 22deg,
-                rgba(255, 215, 185, 0.38) 27deg,
-                rgba(235, 105, 55, 0.12) 33deg,
-                transparent 39deg
+              linear-gradient(
+                135deg,
+                rgba(240, 80, 56, 0.12) 0%,
+                rgba(255, 200, 160, 0.06) 30%,
+                transparent 60%
               )
             `,
-            filter: "blur(18px)",
-            mixBlendMode: "screen",
           }}
         />
-
-        {/* Living Dust Motes Drifting Inside the Light Beam */}
-        <div className="absolute top-[18%] left-[20%] w-1.5 h-1.5 rounded-full bg-white/90 blur-[0.5px] animate-dust-mote" style={{ animationDelay: "0s" }} />
-        <div className="absolute top-[26%] left-[26%] w-1 h-1 rounded-full bg-white/70 blur-[0.5px] animate-dust-mote" style={{ animationDelay: "2.1s", animationDuration: "9.5s" }} />
-        <div className="absolute top-[34%] left-[30%] w-1.5 h-1.5 rounded-full bg-[#f07a50]/90 blur-[0.6px] animate-dust-mote" style={{ animationDelay: "4.2s", animationDuration: "11s" }} />
-        <div className="absolute top-[42%] left-[36%] w-1.5 h-1.5 rounded-full bg-white/80 blur-[0.5px] animate-dust-mote" style={{ animationDelay: "6.3s", animationDuration: "8.5s" }} />
-        <div className="absolute top-[50%] left-[42%] w-1 h-1 rounded-full bg-amber-200/90 blur-[0.5px] animate-dust-mote" style={{ animationDelay: "1.5s", animationDuration: "10s" }} />
       </div>
 
       {/* Ambient Deep Violet & Warm Peach Backdrop Glows for a Rich, Fulfilled Atmosphere */}
@@ -349,16 +324,7 @@ const Homepage = () => {
       </main>
 
       {/* =========================================================================
-          3. RIGHT-SIDE SECTION INDICATOR (01 | INTRO)
-          ========================================================================= */}
-      <div className="right-indicator hidden lg:flex absolute right-8 sm:right-12 lg:right-16 top-1/2 -translate-y-1/2 flex-col items-center gap-2 pointer-events-none z-20">
-        <span className="text-[11px] font-mono tracking-[0.25em] text-neutral-500">01</span>
-        <span className="w-[1px] h-6 bg-neutral-700/80 my-0.5" />
-        <span className="text-[11px] font-mono tracking-[0.25em] text-neutral-500 uppercase">INTRO</span>
-      </div>
-
-      {/* =========================================================================
-          4. BOTTOM BAR (Socials, Scroll, Email)
+          3. BOTTOM BAR (Socials, Scroll, Email)
           ========================================================================= */}
       <footer className="bottom-bar relative z-30 w-full px-5 xs:px-6 sm:px-12 md:px-16 lg:px-20 pb-5 sm:pb-7 pt-3 sm:pt-4">
         {/* Subtle Horizontal Divider Line */}
@@ -372,6 +338,7 @@ const Homepage = () => {
               href="https://www.linkedin.com/in/ratnesh-chaturvedi-80ab94289/"
               target="_blank"
               rel="noreferrer"
+              aria-label="LinkedIn Profile"
               onMouseMove={handleSocialMouseMove}
               onMouseLeave={handleSocialMouseLeave}
               className="social-popup-item w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 bg-white/[0.03] hover:border-[#f05038] hover:bg-[#f05038] flex items-center justify-center hover:text-white transition-colors duration-300 will-change-transform shadow-sm"
@@ -383,6 +350,7 @@ const Homepage = () => {
               href="https://github.com/Ratnesh-Chaturvedi"
               target="_blank"
               rel="noreferrer"
+              aria-label="GitHub Profile"
               onMouseMove={handleSocialMouseMove}
               onMouseLeave={handleSocialMouseLeave}
               className="social-popup-item w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 bg-white/[0.03] hover:border-[#f05038] hover:bg-[#f05038] flex items-center justify-center hover:text-white transition-colors duration-300 will-change-transform shadow-sm"
@@ -394,6 +362,7 @@ const Homepage = () => {
               href="https://x.com/ratnesh__16"
               target="_blank"
               rel="noreferrer"
+              aria-label="Twitter/X Profile"
               onMouseMove={handleSocialMouseMove}
               onMouseLeave={handleSocialMouseLeave}
               className="social-popup-item w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 bg-white/[0.03] hover:border-[#f05038] hover:bg-[#f05038] flex items-center justify-center hover:text-white transition-colors duration-300 will-change-transform shadow-sm"
@@ -407,6 +376,7 @@ const Homepage = () => {
           <div className="flex items-center text-neutral-400">
             <a
               href="mailto:chaturvediratnesh16@gmail.com"
+              aria-label="Send Email"
               onMouseMove={handleSocialMouseMove}
               onMouseLeave={handleSocialMouseLeave}
               className="social-popup-item w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 bg-white/[0.03] hover:border-[#f05038] hover:bg-[#f05038] flex items-center justify-center hover:text-white transition-colors duration-300 will-change-transform shadow-sm"
