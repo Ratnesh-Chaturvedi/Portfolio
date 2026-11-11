@@ -46,7 +46,10 @@ export const getSkillIcon = (skillName) => {
   if (normalized.includes("gemini")) return aiSkillsIcons.gemini;
   if (normalized.includes("rag")) return aiSkillsIcons.rag;
   if (normalized.includes("vector") || normalized.includes("embed")) return aiSkillsIcons.vectorDb;
-  if (normalized.includes("llm") || normalized.includes("agent")) return aiSkillsIcons.llmAgents;
+  if (normalized.includes("voice") || normalized.includes("speech") || normalized.includes("audio")) return aiSkillsIcons.llm;
+  if (normalized.includes("socket")) return imageAsset.nodejsImg;
+  if (normalized.includes("modal")) return imageAsset.pythonImg;
+  if (normalized.includes("llm") || normalized.includes("agent") || normalized.includes("ai")) return aiSkillsIcons.llm;
 
   return imageAsset.reactImg;
 };
@@ -56,6 +59,47 @@ export const getSkillIcon = (skillName) => {
  * Easily add as many new projects as desired by appending objects to this array.
  */
 const projectData = [
+  {
+  id: "learning-room",
+  title: "Learning Room",
+  category: "Collaborative Learning Platform",
+  year: "2026",
+  color: "#6366f1",
+  glowColor: "rgba(99, 102, 241, 0.4)",
+  description:
+    "A collaborative learning space where students connect, create rooms, and learn together in real time. Features interactive whiteboards, live room discussions, shared notes, and collaborative study tools designed to make learning more engaging and productive.",
+  projectImage: imageAsset.learningRoom,
+  skills: [
+    "React",
+    "JavaScript",
+    "Node.js",
+    "Express.js",
+    "MongoDB",
+    "Socket.IO"
+  ],
+  liveDemo: "https://learning-roomai.vercel.app/",
+  codeDemo: "https://github.com/Ratnesh-Chaturvedi/Learning-Room-",
+},
+ {
+  id: "voice-ai",
+  title: "Voice AI",
+  category: "AI-Powered Voice Generation",
+  year: "2026",
+  color: "#f05038",
+  glowColor: "rgba(240, 80, 56, 0.45)",
+  description:
+    "An AI-powered voice platform that transforms text into natural-sounding speech and enables personalized voice cloning. Users can generate expressive audio, create and manage custom voices, and interact with intelligent speech capabilities through an intuitive interface.",
+  projectImage: imageAsset.voiceAi,
+  skills: [
+    "NextJS",
+    "TypeScript",
+    "Python",
+    "Modal",
+    "AI Voice Processing"
+  ],
+  liveDemo: "https://voice-ai-steel.vercel.app/",
+  codeDemo: "https://github.com/Ratnesh-Chaturvedi/Voice-AI",
+},
   {
     id: "hospital",
     title: "Hospital Management Web App",

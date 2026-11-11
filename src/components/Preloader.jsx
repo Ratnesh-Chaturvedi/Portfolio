@@ -96,13 +96,13 @@ const Preloader = ({ onComplete }) => {
       <div ref={contentRef} className="my-auto flex flex-col items-center justify-center text-center px-2">
         
         {/* "Driven by Curiosity" Typography - Balanced Scale for Mobile & Desktop */}
-        <h1 className="font-[tango] text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-wide sm:tracking-wider leading-snug sm:leading-tight">
+        <h1 className="font-[tango] text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-wide sm:tracking-wider leading-relaxed sm:leading-tight">
           <span>Driven</span>
-          <span className="font-[billiondream] text-neutral-400 font-normal italic lowercase text-[1.15em] sm:text-[1.25em] mx-1.5 sm:mx-2 inline-block">
+          <span className="font-[billiondream] text-neutral-400 font-normal italic lowercase text-[1.15em] sm:text-[1.25em] mx-3 sm:mx-4.5 md:mx-6 inline-block">
             by
           </span>
           <br className="sm:hidden" />
-          <span className="text-[#f05038] drop-shadow-[0_0_25px_rgba(240,80,56,0.35)]">
+          <span className="text-[#f05038] drop-shadow-[0_0_25px_rgba(240,80,56,0.35)] inline-block mt-1 sm:mt-0">
             Curiosity
           </span>
         </h1>

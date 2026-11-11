@@ -56,6 +56,11 @@ const Contact = () => {
 
   // Smooth scroll back to top of portfolio
   const handleScrollToTop = () => {
+    const wrapper = document.querySelector("#smooth-wrapper");
+    const content = document.querySelector("#smooth-content");
+    if (wrapper && wrapper.scrollTop !== 0) wrapper.scrollTop = 0;
+    if (content && content.scrollTop !== 0) content.scrollTop = 0;
+
     try {
       const smoother = ScrollSmoother?.get?.();
       if (smoother && typeof smoother.scrollTo === "function") {
