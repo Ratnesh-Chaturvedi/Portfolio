@@ -155,6 +155,16 @@ const Button = ({
   const resolvedTarget = target || (isExternal ? "_blank" : undefined);
   const resolvedRel = rel || (isExternal ? "noreferrer noopener" : undefined);
 
+  const handleClick = (e) => {
+    if (onClick) {
+      if (link && link.startsWith("#")) {
+        e?.preventDefault?.();
+        e?.stopPropagation?.();
+      }
+      onClick(e);
+    }
+  };
+
   const buttonInner = (
     <div
       ref={buttonRef}
@@ -204,7 +214,7 @@ const Button = ({
   return (
     <a
       href={link || "#"}
-      onClick={onClick}
+      onClick={handleClick}
       target={resolvedTarget}
       rel={resolvedRel}
       className="inline-block focus:outline-none"

@@ -3,6 +3,8 @@ import project2 from "./k72.jpg"
 import project3 from "./gemini-frontend.jpg"
 import project4 from "./portfolio-project.jpg"
 import project5 from "./connectin.jpg"
+import learningRoom from "./learning-room-project.jpg"
+import voiceAi from "./voice-ai-project.jpg"
 import appwriteImg from "./appwrite.png"
 import cImg from "./c.webp"
 import cppImg from "./c++.png"
@@ -27,6 +29,8 @@ import htmlImg from "./html.png"
 import inngest from "./inngest.png"
 
 export const imageAsset = {
+  learningRoom,
+  voiceAi,
   project1,
   project2,
   project3,

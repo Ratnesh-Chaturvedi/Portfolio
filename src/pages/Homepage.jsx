@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { motion, AnimatePresence } from "motion/react";
+import { ScrollSmoother } from "gsap/all";
+import { motion as Motion, AnimatePresence } from "motion/react";
 import Button from "../components/Button";
 
 /**
@@ -35,20 +36,49 @@ const Homepage = () => {
   // Smooth scroll handler compatible with GSAP ScrollSmoother and native scrolling
   const handleScroll = (e, targetId) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+
+    // Ensure internal containers are never scrolled natively by accidental browser jumps
+    const wrapper = document.querySelector("#smooth-wrapper");
+    const content = document.querySelector("#smooth-content");
+    if (wrapper && wrapper.scrollTop !== 0) wrapper.scrollTop = 0;
+    if (content && content.scrollTop !== 0) content.scrollTop = 0;
+
+    // Return to top handler
+    if (targetId === "#home" || targetId === "top") {
+      try {
+        const smoother = ScrollSmoother.get();
+        if (smoother && typeof smoother.scrollTo === "function") {
+          smoother.scrollTo(0, true);
+          return;
+        }
+      } catch {
+        // Fallback
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     const target = document.querySelector(targetId);
     if (!target) return;
 
     try {
-      const smoother = gsap?.plugins?.ScrollSmoother?.get?.() || window?.ScrollSmoother?.get?.();
+      const smoother = ScrollSmoother.get();
       if (smoother && typeof smoother.scrollTo === "function") {
-        smoother.scrollTo(target, true);
+        // Use smoother.scrollTo with exact position matching
+        smoother.scrollTo(target, true, "top top");
         return;
       }
     } catch {
-      // Fallback to native smooth scroll
+      // Fallback
     }
 
-    target.scrollIntoView({ behavior: "smooth" });
+    // Safe fallback without calling scrollIntoView (which pollutes container.scrollTop)
+    const targetY = target.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({
+      top: targetY,
+      behavior: "smooth",
+    });
   };
 
   // Magnetic cursor tracking for circular social icons
@@ -253,13 +283,13 @@ const Homepage = () => {
             {/* Line 1: Completely static "I build " + vertical sliding highlighted word */}
             <div className="flex items-baseline flex-nowrap whitespace-nowrap">
               <span className="shrink-0">I build&nbsp;</span>
-              <motion.span
+              <Motion.span
                 layout
                 transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
                 className="relative inline-flex items-baseline overflow-hidden h-[1.14em] -my-[0.06em] align-baseline"
               >
                 <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
+                  <Motion.span
                     key={WORDS[wordIndex]}
                     layout="position"
                     initial={{ y: "100%", opacity: 0, filter: "blur(8px)" }}
@@ -272,9 +302,9 @@ const Homepage = () => {
                     className="font-editorial italic font-normal tracking-normal pr-2.5 sm:pr-3.5 hero-word-intro will-change-transform inline-block"
                   >
                     {WORDS[wordIndex]}
-                  </motion.span>
+                  </Motion.span>
                 </AnimatePresence>
-              </motion.span>
+              </Motion.span>
             </div>
 
             {/* Line 2: Completely static "things that feel human." - strictly 1 line */}

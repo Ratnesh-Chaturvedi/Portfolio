@@ -20,9 +20,12 @@ const SleekProjectCard = forwardRef(({ project = {}, index = 0, total = 1, isAct
     description = "",
     projectImage,
     skill = [],
+    skills = [],
     liveDemo,
     codeDemo,
   } = project;
+
+  const techStack = (skill && skill.length > 0) ? skill : (skills || []);
 
   // Layering priority: active card is highest, adjacent cards are layered right below
   const layerZIndex = isActive ? 30 : Math.max(1, total - Math.abs(index));
@@ -172,7 +175,7 @@ const SleekProjectCard = forwardRef(({ project = {}, index = 0, total = 1, isAct
         {/* Tech Stack Pills Bar */}
         <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/[0.05]">
           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-            {skill.map((skillName) => (
+            {techStack.map((skillName) => (
               <span
                 key={skillName}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.07] text-[10px] sm:text-[11px] font-mono text-neutral-300"

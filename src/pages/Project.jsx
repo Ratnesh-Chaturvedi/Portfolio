@@ -163,6 +163,11 @@ const Project = () => {
     const targetProgress = total > 1 ? index / (total - 1) : 0;
     const targetScroll = st.start + targetProgress * (st.end - st.start);
 
+    const wrapper = document.querySelector("#smooth-wrapper");
+    const content = document.querySelector("#smooth-content");
+    if (wrapper && wrapper.scrollTop !== 0) wrapper.scrollTop = 0;
+    if (content && content.scrollTop !== 0) content.scrollTop = 0;
+
     try {
       const smoother = ScrollSmoother?.get?.();
       if (smoother && typeof smoother.scrollTo === "function") {
