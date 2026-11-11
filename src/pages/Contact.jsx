@@ -33,10 +33,7 @@ const Contact = () => {
 
 
   return (
-    <div  className='contactContainer  min-w-screen min-h-screen   relative bg-[#E0E0E0] overflow-hidden'>
-      <p className=" absolute  text-[#f05038] font-[tango] text-xl top-4  left-4 z-20">
-        #contact
-      </p>
+    <div id="contact" className='contactContainer  min-w-screen min-h-screen   relative bg-[#E0E0E0] overflow-hidden'>
       <div className="blobOuter absolute min-w-screen min-h-screen inset-0 m-auto  bg-transparent ">
         <div className="blobIneer absolute w-full h-full inset-0 m-auto blur-[100px] overflow-hidden rounded-full">
           <div className="blob absolute  w-full h-full inset-0 m-auto "></div>

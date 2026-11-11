@@ -115,12 +115,18 @@ const ProjectCards = ({ data }) => {
               icon={
                 <i className="ri-code-s-slash-line font-bold rounded-full    tracking-wide" />
               }
+              hoverContent="Source ↗"
+              variant="dark"
+              size="sm"
               content="Code"
             />
 
             <Button
               link={data.liveDemo}
               icon={<i className="ri-code-s-slash-line font-bold" />}
+              hoverContent="Visit ↗"
+              variant="dark"
+              size="sm"
               content="Live"
             />
           </div>

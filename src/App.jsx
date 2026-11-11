@@ -19,18 +19,20 @@ const App = () => {
   
 
     useGSAP(() => {
-      
-    ScrollSmoother.create({
-      smooth: 2,
-      effects: true,
+      try {
+        if (ScrollSmoother && typeof ScrollSmoother.create === "function") {
+          ScrollSmoother.create({
+            smooth: 1.5,
+            effects: true,
+          });
+        }
+      } catch (e) {
+        console.warn("ScrollSmoother:", e);
+      }
     });
-  },);
+
   return (
-    
-  
-   
-    
-    <div id="smooth-wrapper" className="bg-[#121111]">
+    <div id="smooth-wrapper" className="bg-[#09090D] min-h-screen text-[#F5F2FA]">
       <div id="smooth-content">
         <Suspense fallback={<SimplePreloader/>}>
           <Homepage />
